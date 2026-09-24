@@ -1,122 +1,149 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import {
+  useEffect,
+} from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+import {
+  useDispatch,
+} from "react-redux";
+
+import {
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+
+
+import {
+  getCurrentUser,
+} from "./features/auth/authSlice";
+
+
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+import AdminRoute from "./components/routes/AdminRoute";
+import AppLayout from "./components/layout/AppLayout";
+
+
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+
+
+import Dashboard from "./pages/user/Dashboard";
+import Requests from "./pages/user/Requests";
+import CreateRequest from "./pages/user/CreateRequest";
+import RequestDetails from "./pages/user/RequestDetails";
+import EditRequest from "./pages/user/EditRequest";
+
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminRequests from "./pages/admin/AdminRequests";
+import AdminRequestDetails from "./pages/admin/AdminRequestDetails";
+import Users from "./pages/admin/Users";
+
+
+const App = () => {
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    dispatch(
+      getCurrentUser()
+    );
+  }, [dispatch]);
+
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <Routes>
+      {/* Public */}
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
+
+
+      {/* Authenticated */}
+      <Route
+        element={<ProtectedRoute />}
+      >
+        <Route
+          element={<AppLayout />}
         >
-          Count is {count}
-        </button>
-      </section>
+          {/* USER */}
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
 
-      <div className="ticks"></div>
+          <Route
+            path="/requests"
+            element={<Requests />}
+          />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          <Route
+            path="/requests/new"
+            element={<CreateRequest />}
+          />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
+          <Route
+            path="/requests/:id"
+            element={<RequestDetails />}
+          />
 
-export default App
+          <Route
+            path="/requests/:id/edit"
+            element={<EditRequest />}
+          />
+
+
+          {/* ADMIN */}
+          <Route
+            element={<AdminRoute />}
+          >
+            <Route
+              path="/admin"
+              element={
+                <AdminDashboard />
+              }
+            />
+
+            <Route
+              path="/admin/requests"
+              element={
+                <AdminRequests />
+              }
+            />
+
+            <Route
+              path="/admin/requests/:id"
+              element={
+                <AdminRequestDetails />
+              }
+            />
+
+            <Route
+              path="/admin/users"
+              element={<Users />}
+            />
+          </Route>
+        </Route>
+      </Route>
+
+
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to="/login"
+            replace
+          />
+        }
+      />
+    </Routes>
+  );
+};
+
+export default App;
