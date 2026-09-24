@@ -6,34 +6,21 @@ const serviceRequestSchema = new mongoose.Schema(
       type: String,
       required: [true, "Title is required"],
       trim: true,
-      minlength: [
-        3,
-        "Title must be at least 3 characters",
-      ],
-      maxlength: [
-        150,
-        "Title cannot exceed 150 characters",
-      ],
+      minlength: [ 3, "Title must be at least 3 characters" ],
+      maxlength: [ 150, "Title cannot exceed 150 characters" ],
     },
 
     description: {
       type: String,
       required: [true, "Description is required"],
       trim: true,
-      minlength: [
-        10,
-        "Description must be at least 10 characters",
-      ],
-      maxlength: [
-        2000,
-        "Description cannot exceed 2000 characters",
-      ],
+      minlength: [ 10, "Description must be at least 10 characters" ],
+      maxlength: [2000, "Description cannot exceed 2000 characters"],
     },
 
     category: {
       type: String,
-      enum: [
-        "TECHNICAL",
+      enum: [ "TECHNICAL",
         "BILLING",
         "ACCOUNT",
         "OTHER",
@@ -74,6 +61,12 @@ serviceRequestSchema.index({ status: 1 });
 serviceRequestSchema.index({ category: 1 });
 serviceRequestSchema.index({ priority: 1 });
 serviceRequestSchema.index({ createdAt: -1 });
+
+serviceRequestSchema.index({
+  title: "text",
+  description: "text",
+});
+
 
 const ServiceRequest = mongoose.model(
   "ServiceRequest",
