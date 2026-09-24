@@ -194,12 +194,6 @@ Covers:
 - No email notifications or request activity/history timeline (both listed as optional in the assignment).
 - No file attachments on requests.
 
-## Future Improvements
-- Request activity/history timeline (a `RequestActivity` collection).
-- Email notifications on status change.
-- Refresh tokens with shorter-lived access tokens.
-- Rate limiting on auth endpoints.
-
 ## Author
 **Hansi Tharaki Randima**
 Software Engineering Undergraduate, University of Kelaniya
